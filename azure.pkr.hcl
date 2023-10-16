@@ -1,3 +1,9 @@
+locals {
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
+  #  https://github.com/hashicorp/packer-plugin-azure/issues/65
+  version_timestamp = formatdate("YYYY.MM.DD", timestamp())
+}
+
 source azure-arm ubuntu-x86-64 {
   client_id       = var.client_id
   client_secret   = var.client_secret
