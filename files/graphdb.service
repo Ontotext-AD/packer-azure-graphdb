@@ -1,0 +1,17 @@
+[Unit]
+Description="GraphDB Engine"
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+User=graphdb
+Group=graphdb
+Environment="GDB_JAVA_OPTS=-Dgraphdb.home=/var/opt/graphdb/node -Dgraphdb.home.conf=/etc/graphdb -Dhttp.socket.keepalive=true -XX:MaxRAMPercentage=85.0 -XX:-UseCompressedOops"
+ExecStart="/opt/graphdb/bin/graphdb"
+TimeoutSec=120
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+[Unit]
+Description="GraphDB Cluster Proxy"
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+User=graphdb
+Group=graphdb
+Environment="GDB_JAVA_OPTS=-Dgraphdb.home=/var/opt/graphdb/cluster-proxy -Dgraphdb.home.conf=/etc/graphdb-cluster-proxy -Dhttp.socket.keepalive=true -Xmx1g"
+ExecStart="/opt/graphdb/bin/cluster-proxy"
+TimeoutSec=120
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
