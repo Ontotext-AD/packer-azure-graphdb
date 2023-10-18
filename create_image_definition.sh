@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Required when running the script on Windows
 alias az=az.cmd || true
 
