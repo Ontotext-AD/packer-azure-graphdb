@@ -15,10 +15,13 @@ source azure-arm ubuntu-x86-64 {
     subscription        = var.subscription_id
     resource_group      = var.gallery_resource_group
     gallery_name        = var.gallery_name
-    image_name          = var.image_name_x86_64
+    image_name          = var.image_definition_name
     image_version       = local.version_timestamp
     replication_regions = var.replication_regions
   }
+
+  shared_image_gallery_replica_count               = var.image_replica_count
+  shared_gallery_image_version_exclude_from_latest = var.shared_gallery_image_version_exclude_from_latest
 
   azure_tags = {
     GDB_Version      = "${var.gdb_version}"
@@ -29,16 +32,16 @@ source azure-arm ubuntu-x86-64 {
   communicator              = "ssh"
   ssh_clear_authorized_keys = true
   os_type                   = var.os_type
+  os_disk_size_gb           = var.os_disk_size_gb
   image_offer               = var.image_offer
   image_publisher           = var.image_publisher
   image_sku                 = var.image_sku
 
-  vm_size = var.vm_size 
-          
+  vm_size                      = var.vm_size
   allowed_inbound_ip_addresses = [var.my_ip_address]
 }
 
-# Not yet supported by Packer https://github.com/hashicorp/packer/issues/12188#issuecomment-1380736642 
+#TODO Not yet supported by Packer https://github.com/hashicorp/packer/issues/12188#issuecomment-1380736642 
 #source azure-arm ubuntu-arm64 {
 #  client_id       = var.client_id
 #  client_secret   = var.client_secret
