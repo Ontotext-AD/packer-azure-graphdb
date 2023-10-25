@@ -35,6 +35,7 @@ if [ -f "$variables_file" ]; then
        --minimum-cpu-core 4 \
        --maximum-cpu-core 64 \
        --minimum-memory 4 \
+       --features 'IsAcceleratedNetworkSupported=true DiskControllerTypes=SCSI,NVMe' \
        --maximum-memory 128 "
     
     echo "Extracted variables and constructed Azure CLI command:"
