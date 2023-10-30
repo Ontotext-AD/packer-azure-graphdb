@@ -28,5 +28,4 @@ build {
     ]
     inline_shebang = "/bin/sh -x"
   }
-
 }
