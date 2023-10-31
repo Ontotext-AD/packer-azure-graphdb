@@ -41,7 +41,7 @@ source azure-arm ubuntu-x86-64 {
   allowed_inbound_ip_addresses = [var.my_ip_address]
 }
 
-#TODO Not yet supported by Packer https://github.com/hashicorp/packer/issues/12188#issuecomment-1380736642 
+#TODO Not yet supported by Packer https://github.com/hashicorp/packer/issues/12188#issuecomment-1380736642
 #source azure-arm ubuntu-arm64 {
 #  client_id       = var.client_id
 #  client_secret   = var.client_secret
