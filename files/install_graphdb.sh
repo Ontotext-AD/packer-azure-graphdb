@@ -9,12 +9,12 @@ done
 
 timedatectl set-timezone UTC
 
-# Shred authorized_keys
-shred -u /root/.ssh/authorized_keys /home/ubuntu/.ssh/authorized_keys || true
-
 # Install Tools
 apt-get -o DPkg::Lock::Timeout=300 update -y
 apt-get -o DPkg::Lock::Timeout=300 install -y bash-completion jq nvme-cli openjdk-11-jdk unzip
+
+# Install Azure CLI
+curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # Create the GraphDB user
 useradd --comment "GraphDB Service User" --create-home --system --shell /bin/bash --user-group graphdb
