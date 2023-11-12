@@ -34,6 +34,8 @@ rm graphdb-"${GRAPHDB_VERSION}"-dist.zip
 mv graphdb-"${GRAPHDB_VERSION}" /opt/graphdb-"${GRAPHDB_VERSION}"
 ln -s /opt/graphdb-"${GRAPHDB_VERSION}" /opt/graphdb
 
+mv /tmp/graphdb.env /etc/graphdb/graphdb.env
+
 chown -R graphdb:graphdb /etc/graphdb \
                          /etc/graphdb-cluster-proxy \
                          /opt/graphdb \
