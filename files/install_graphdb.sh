@@ -47,3 +47,6 @@ mv /tmp/graphdb.service /lib/systemd/system/graphdb.service
 systemctl daemon-reload
 systemctl enable graphdb.service
 systemctl start graphdb.service
+
+# Shred authorized_keys
+shred -u /root/.ssh/authorized_keys /home/packer/.ssh/authorized_keys || true
