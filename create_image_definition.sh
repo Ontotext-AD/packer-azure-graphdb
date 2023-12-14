@@ -12,6 +12,7 @@ variables_file="variables.pkrvars.hcl"
 if [ -f "$variables_file" ]; then
   # Use grep to extract the variable values
 
+  subscription_id=$(grep 'subscription_id' "$variables_file" | cut -d '"' -f 2)
   image_definition_name=$(grep 'image_definition_name' "$variables_file" | cut -d '"' -f 2)
   gdb_version=$(grep 'gdb_version' "$variables_file" | cut -d '"' -f 2)
   gallery_resource_group=$(grep 'gallery_resource_group' "$variables_file" | cut -d '"' -f 2)
@@ -26,6 +27,7 @@ if [ -f "$variables_file" ]; then
 
 # TODO extend command with --features 'IsAcceleratedNetworkSupported=true DiskControllerTypes=SCSI,NVMe' when we have quota for Standard_B2pts_v2
   az_command="az sig image-definition create \
+       --subscription $subscription_id \
        -g $gallery_resource_group \
        --gallery-name $gallery_name \
        --gallery-image-definition "$image_definition_name" \
@@ -41,7 +43,7 @@ if [ -f "$variables_file" ]; then
 
   echo "Extracted variables and constructed Azure CLI command:"
   eval "$az_command"
-  az sig image-definition wait -i "$image_definition_name" -r "$gallery_name" -g "$gallery_resource_group" --created
+  az sig image-definition wait -i "$image_definition_name" -r "$gallery_name" -g "$gallery_resource_group" --created --subscription $subscription_id
   packer build -var-file="variables.pkrvars.hcl" .
 else
   echo "The variables file $variables_file does not exist."

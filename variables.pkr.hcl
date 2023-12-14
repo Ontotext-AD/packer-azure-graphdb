@@ -66,7 +66,7 @@ variable vm_size {
   type    = string
   default = "Standard_B1ls"
   # TODO replace with B2pts_v2 when quota is available in order to build with IsAcceleratedNetworkSupported=true DiskControllerTypes=SCSI,NVMe features
-  # default = "Standard_B2pts_v2"
+#   default = "Standard_B2ats_v2"
 }
 
 variable image_replica_count {
