@@ -34,17 +34,17 @@ Follow these steps to build an AMI for GraphDB using Packer:
    replication regions, subscription, client and tennat IDs. To do so, create a variables file `variables.pkrvars.hcl`,
    example file:
       ```bash
-      subscription_id        = "<your_azure_subscription_id>"
-      client_id              = "<your_azure_service_principal_id>"
-      client_secret          = "<your_azure_service_principal_secret>"
-      tenant_id              = "<your_azure_tenant_id>"
-      primary_location       = "East US"
-      replication_regions    = ["North Europe", "UK South"]
-      image_definition_name  = "10.4.0-x86_64"
-      gdb_version            = "10.4.0"
-      gallery_resource_group = "Packer-RG"
-      gallery_name           = "GraphDB"
-      my_ip_address          = "<your_public_IP_address>"
+      subscription_id              = "<your_azure_subscription_id>"
+      client_id                    = "<your_azure_service_principal_id>"
+      client_secret                = "<your_azure_service_principal_secret>"
+      tenant_id                    = "<your_azure_tenant_id>"
+      primary_location             = "East US"
+      replication_regions          = ["North Europe", "UK South"]
+      image_definition_name        = "10.4.0-x86_64"
+      gdb_version                  = "10.4.0"
+      gallery_resource_group       = "Packer-RG"
+      gallery_name                 = "GraphDB"
+      allowed_inbound_ip_addresses = "<your_public_IP_address>"
       ```
 
 4. **Build the AMI**:
@@ -105,7 +105,7 @@ The following points can be customized in a packer variables file `variables.pkr
 
 **Networking Configuration**
 
-* my_ip_address (string): Your IP address for network security settings.
+* allowed_inbound_ip_addresses (string): Specify the list of IP addresses and CIDR blocks that should be allowed access to the VM.
 
 **OS and Image Defaults**
 

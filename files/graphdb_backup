@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# This script utilizes the cloud backup functionality of GraphDB.
+# The script accepts four variables in the following order: graphdb_user, graphdb_password, backup_storage_account_name, backup_storage_container_name
+
+set -euo pipefail
+
+az login --identity
+
+GRAPHDB_USER="${1}"
+GRAPHDB_PASSWORD="${2}"
+NODE_STATE="$(curl --silent --fail --user "$GRAPHDB_USER:$GRAPHDB_PASSWORD" localhost:7200/rest/cluster/node/status | jq -r .nodeState)"
+BACKUP_NAME="$(date +'%Y-%m-%d_%H-%M-%S').tar"
+BACKUP_STORAGE_ACCOUNT_NAME="${3}"
+BACKUP_STORAGE_CONTAINER_NAME="${4}"
+max_retries=3
+retry_count=0
+
+perform_backup() {
+  while [ "$retry_count" -lt "$max_retries" ]; do
+    start_time=$(date +%s)
+
+    response_code=$(curl -X POST --write-out %{http_code} --silent --output /dev/null \
+      --header 'Content-Type: application/json' \
+      -u "$GRAPHDB_USER:$GRAPHDB_PASSWORD" \
+      --header 'Accept: application/json' \
+      -d "{\"bucketUri\": \"az://${BACKUP_STORAGE_CONTAINER_NAME}/${BACKUP_NAME}?blob_storage_account=${BACKUP_STORAGE_ACCOUNT_NAME}\", \"backupOptions\": {\"backupSystemData\": true}}" \
+      'http://localhost:7200/rest/recovery/cloud-backup'
+    )
+
+    end_time=$(date +%s)
+    elapsed_time=$((end_time - start_time))
+
+    if [ "$response_code" -eq 200 ]; then
+      echo "Backup uploaded successfully to ${BACKUP_STORAGE_ACCOUNT_NAME} in $elapsed_time seconds."
+      break
+    else
+      echo "Failed to complete the backup and upload. HTTP Response Code: $response_code"
+      echo "Request took: $elapsed_time"
+
+      if [ "$retry_count" -eq "$max_retries" ]; then
+        echo "Max retries reached. Backup could not be created. Exiting..."
+        return 1
+      else
+        echo "Retrying..."
+      fi
+
+      ((retry_count=retry_count + 1))
+      sleep 5
+    fi
+  done
+}
+
+# Checks if GraphDB is running in cluster
+IS_CLUSTER=$(
+  curl -s -o /dev/null \
+    -u "$GRAPHDB_USER:$GRAPHDB_PASSWORD" \
+    -w "%{http_code}" \
+    http://localhost:7200/rest/monitor/cluster
+)
+
+if [ "$IS_CLUSTER" == 200 ]; then
+  # Checks if the current GraphDB instance is Leader, otherwise exits.
+  if [ "$NODE_STATE" != "LEADER" ]; then
+    echo "The current node is not the leader, but $NODE_STATE"
+    exit 0
+  fi
+  perform_backup
+elif [ "$IS_CLUSTER" == 503 ]; then
+  perform_backup
+fi
+
