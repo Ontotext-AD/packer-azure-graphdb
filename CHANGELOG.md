@@ -6,6 +6,7 @@ All notable changes to the Packer template for creating GraphDB Azure VM images 
 
 - Removed features preventing build with Standard_B1ls VM
 - Fixed create_image_definition.sh
+- Added support for specifying subscription in create_image_definition.sh
 
 ## 1.1.0
 
