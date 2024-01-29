@@ -2,15 +2,16 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
-## 1.2.0
-
-- Removed features preventing build with Standard_B1ls VM
-- Fixed create_image_definition.sh
-- Added support for specifying subscription in create_image_definition.sh
-
 ## 1.1.0
 
 - Installed Azure CLI
+- Removed features preventing build with Standard_B1ls VM.
+- Fixed create_image_definition.sh
+- Added subscription as an attribute in the [create_image_definition.sh](create_image_definition.sh) helper script.
+- Added installation of Telegraf.
+- Added provisioning of GraphDB backup script.
+- Added keepalive and file max size settings.
+- Improved logging of the GraphDB install script.
 
 ## 1.0.0
 

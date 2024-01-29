@@ -8,7 +8,8 @@ build {
       "./files/graphdb.env",
       "./files/graphdb.service",
       "./files/graphdb-cluster-proxy.service",
-      "./files/install_graphdb.sh"
+      "./files/install_graphdb.sh",
+      "./files/graphdb_backup"
     ]
     destination = "/tmp/"
   }

@@ -1,15 +1,16 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-  #  https://github.com/hashicorp/packer-plugin-azure/issues/65
+  # See https://github.com/hashicorp/packer-plugin-azure/issues/65
   version_timestamp = formatdate("YYYY.MM.DD", timestamp())
 }
 
 source azure-arm ubuntu-x86-64 {
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  subscription_id = var.subscription_id
-  tenant_id       = var.tenant_id
-  location        = var.primary_location
+  use_azure_cli_auth = var.use_azure_cli_auth
+  client_id          = var.client_id
+  client_secret      = var.client_secret
+  subscription_id    = var.subscription_id
+  tenant_id          = var.tenant_id
+  location           = var.primary_location
 
   shared_image_gallery_destination {
     subscription        = var.subscription_id
@@ -38,7 +39,7 @@ source azure-arm ubuntu-x86-64 {
   image_sku                 = var.image_sku
 
   vm_size                      = var.vm_size
-  allowed_inbound_ip_addresses = [var.my_ip_address]
+  allowed_inbound_ip_addresses = var.allowed_inbound_ip_addresses
 }
 
 #TODO Not yet supported by Packer https://github.com/hashicorp/packer/issues/12188#issuecomment-1380736642
@@ -72,5 +73,5 @@ source azure-arm ubuntu-x86-64 {
 #
 #  vm_size = "Standard_D2ps_v5"
 #
-#  allowed_inbound_ip_addresses = [var.my_ip_address]
+#  allowed_inbound_ip_addresses = [var.allowed_inbound_ip_addresses]
 #}
