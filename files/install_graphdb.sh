@@ -112,6 +112,14 @@ echo 'fs.file-max = 262144' | tee -a /etc/sysctl.conf
 
 sysctl -p
 
+echo "##################################################"
+echo "#    Setting Azure Application Insights agent    #"
+echo "##################################################"
+
+wget -P /opt/graphdb/ https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.19/applicationinsights-agent-3.4.19.jar
+ln -s /opt/graphdb/applicationinsights-agent-3.4.19.jar /opt/graphdb/applicationinsights-agent.jar
+chown graphdb:graphdb /opt/graphdb/applicationinsights-agent.jar
+
 echo "###################################"
 echo "#    Provisioning Backup Script   #"
 echo "###################################"

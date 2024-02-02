@@ -18,6 +18,10 @@ retry_count=0
 
 perform_backup() {
   while [ "$retry_count" -lt "$max_retries" ]; do
+    current_time=$(date +"%T %Y-%m-%d")
+    echo "#####################################"
+    echo "Begin backup creation ${current_time}"
+    echo "#####################################"
     start_time=$(date +%s)
 
     response_code=$(curl -X POST --write-out %{http_code} --silent --output /dev/null \
@@ -62,11 +66,11 @@ IS_CLUSTER=$(
 if [ "$IS_CLUSTER" == 200 ]; then
   # Checks if the current GraphDB instance is Leader, otherwise exits.
   if [ "$NODE_STATE" != "LEADER" ]; then
-    echo "The current node is not the leader, but $NODE_STATE"
+    echo "The current node is not the leader, but $NODE_STATE. Exiting"
     exit 0
   fi
-  perform_backup
+  perform_backup | tee -a /var/opt/graphdb/node/graphdb_backup.log
 elif [ "$IS_CLUSTER" == 503 ]; then
-  perform_backup
+  perform_backup | tee -a /var/opt/graphdb/node/graphdb_backup.log
 fi
 
