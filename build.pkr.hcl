@@ -16,7 +16,7 @@ build {
 
   provisioner "shell" {
     environment_vars = [
-      "GRAPHDB_VERSION=${var.gdb_version}",
+      "GRAPHDB_VERSION=${var.graphdb_version}",
     ]
     inline      = ["sudo -E bash /tmp/install_graphdb.sh"]
     max_retries = 2

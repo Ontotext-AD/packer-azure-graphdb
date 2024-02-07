@@ -1,7 +1,8 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
   # See https://github.com/hashicorp/packer-plugin-azure/issues/65
-  version_timestamp = formatdate("YYYY.MM.DD", timestamp())
+  version_timestamp       = formatdate("YYYY.MM.DD", timestamp())
+  gallery_subscription_id = var.gallery_subscription_id != null ? var.gallery_subscription_id : var.subscription_id
 }
 
 source azure-arm ubuntu-x86-64 {
@@ -10,68 +11,37 @@ source azure-arm ubuntu-x86-64 {
   client_secret      = var.client_secret
   subscription_id    = var.subscription_id
   tenant_id          = var.tenant_id
-  location           = var.primary_location
+
+  location                  = var.build_location
+  temp_resource_group_name  = var.build_temp_resource_group_name
+  build_resource_group_name = var.build_resource_group_name
+
+  image_offer     = var.base_image_offer
+  image_publisher = var.base_image_publisher
+  image_sku       = var.base_image_sku
 
   shared_image_gallery_destination {
-    subscription        = var.subscription_id
+    subscription        = local.gallery_subscription_id
     resource_group      = var.gallery_resource_group
     gallery_name        = var.gallery_name
-    image_name          = var.image_definition_name
+    image_name          = var.gallery_image_definition
     image_version       = local.version_timestamp
-    replication_regions = var.replication_regions
+    replication_regions = var.gallery_image_replication_regions
   }
 
-  shared_image_gallery_replica_count               = var.image_replica_count
-  shared_gallery_image_version_exclude_from_latest = var.shared_gallery_image_version_exclude_from_latest
+  shared_image_gallery_replica_count               = var.gallery_image_replica_count
+  shared_gallery_image_version_exclude_from_latest = var.gallery_image_version_exclude_from_latest
 
-  azure_tags = {
-    GDB_Version      = "${var.gdb_version}"
+  azure_tags = merge({
+    GraphDB_Version  = "${var.graphdb_version}"
     CPU_Architecture = "x86-64"
     Build_Timestamp  = "${local.timestamp}"
-  }
+  }, var.tags)
 
-  communicator              = "ssh"
-  ssh_clear_authorized_keys = true
-  os_type                   = var.os_type
-  os_disk_size_gb           = var.os_disk_size_gb
-  image_offer               = var.image_offer
-  image_publisher           = var.image_publisher
-  image_sku                 = var.image_sku
-
-  vm_size                      = var.vm_size
-  allowed_inbound_ip_addresses = var.allowed_inbound_ip_addresses
+  communicator                 = "ssh"
+  ssh_clear_authorized_keys    = true
+  os_type                      = var.build_os_type
+  os_disk_size_gb              = var.build_os_disk_size_gb
+  vm_size                      = var.build_vm_size
+  allowed_inbound_ip_addresses = var.build_allowed_inbound_ip_addresses
 }
-
-#TODO Not yet supported by Packer https://github.com/hashicorp/packer/issues/12188#issuecomment-1380736642
-#source azure-arm ubuntu-arm64 {
-#  client_id       = var.client_id
-#  client_secret   = var.client_secret
-#  subscription_id = var.subscription_id
-#  tenant_id       = var.tenant_id
-#
-#  location                          = var.primary_location
-#  shared_image_gallery_destination {
-#    subscription        = var.subscription_id
-#    resource_group      = var.gallery_resource_group
-#    gallery_name        = var.gallery_name
-#    image_name          = var.image_name_arm64
-#    image_version       = local.version_timestamp
-#    replication_regions = var.replication_regions
-#  }
-#
-#  azure_tags = {
-#    GDB_Version      = "${var.gdb_version}"
-#    CPU_Architecture = "arm64"
-#    Build_Timestamp  = "${local.timestamp}"
-#  }
-#
-#  communicator    = "ssh"
-#  os_type         = "Linux"
-#  image_offer     = "0001-com-ubuntu-server-jammy"
-#  image_publisher = "canonical"
-#  image_sku       = "22_04-lts-arm64"
-#
-#  vm_size = "Standard_D2ps_v5"
-#
-#  allowed_inbound_ip_addresses = [var.allowed_inbound_ip_addresses]
-#}
