@@ -62,7 +62,7 @@ echo "#    Downloading and installing GraphDB    #"
 echo "############################################"
 
 cd /tmp
-curl -O https://maven.ontotext.com/repository/owlim-releases/com/ontotext/graphdb/graphdb/"${GRAPHDB_VERSION}"/graphdb-"${GRAPHDB_VERSION}"-dist.zip
+curl -fsSL -O https://maven.ontotext.com/repository/owlim-releases/com/ontotext/graphdb/graphdb/"${GRAPHDB_VERSION}"/graphdb-"${GRAPHDB_VERSION}"-dist.zip
 
 unzip -qq graphdb-"${GRAPHDB_VERSION}"-dist.zip
 rm graphdb-"${GRAPHDB_VERSION}"-dist.zip
@@ -96,10 +96,11 @@ echo "#############################"
 echo "#    Installing Telegraf    #"
 echo "#############################"
 
-curl -s https://repos.influxdata.com/influxdata-archive.key > influxdata-archive.key
+curl -fsSL https://repos.influxdata.com/influxdata-archive.key > influxdata-archive.key
 echo '943666881a1b8d9b849b74caebf02d3465d6beb716510d86a39f6c8e8dac7515 influxdata-archive.key' | sha256sum -c && cat influxdata-archive.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive.gpg > /dev/null
 echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
-apt-get update && apt-get install telegraf
+apt-get -qq update
+apt-get -qq install telegraf
 
 echo "Telegraf installed"
 
@@ -112,13 +113,17 @@ echo 'fs.file-max = 262144' | tee -a /etc/sysctl.conf
 
 sysctl -p
 
+echo "keepalive and max file size are configured"
+
 echo "##################################################"
 echo "#    Setting Azure Application Insights agent    #"
 echo "##################################################"
 
-wget -P /opt/graphdb/ https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.19/applicationinsights-agent-3.4.19.jar
+curl -fsSL -O --output-dir /opt/graphdb/ https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.19/applicationinsights-agent-3.4.19.jar
 ln -s /opt/graphdb/applicationinsights-agent-3.4.19.jar /opt/graphdb/applicationinsights-agent.jar
-chown graphdb:graphdb /opt/graphdb/applicationinsights-agent.jar
+chown -R graphdb:graphdb /opt/graphdb/applicationinsights-*.jar
+
+echo "Set up Azure Application Insights agent"
 
 echo "###################################"
 echo "#    Provisioning Backup Script   #"
