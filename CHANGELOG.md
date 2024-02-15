@@ -2,6 +2,16 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
+## 1.2.0
+
+### Changes
+
+- The `gallery_subscription_id` is now a required variable instead of defaulting to `subscription_id`.
+
+### Fixes
+
+- Fixed [create_image_definition.sh](create_image_definition.sh) to use `gallery_subscription_id`
+
 ## 1.1.0
 
 - Installed Azure CLI

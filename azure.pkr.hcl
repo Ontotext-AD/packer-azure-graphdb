@@ -1,8 +1,7 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
   # See https://github.com/hashicorp/packer-plugin-azure/issues/65
-  version_timestamp       = formatdate("YYYY.MM.DD", timestamp())
-  gallery_subscription_id = var.gallery_subscription_id != null ? var.gallery_subscription_id : var.subscription_id
+  version_timestamp = formatdate("YYYY.MM.DD", timestamp())
 }
 
 source azure-arm ubuntu-x86-64 {
@@ -21,7 +20,7 @@ source azure-arm ubuntu-x86-64 {
   image_sku       = var.base_image_sku
 
   shared_image_gallery_destination {
-    subscription        = local.gallery_subscription_id
+    subscription        = var.gallery_subscription_id
     resource_group      = var.gallery_resource_group
     gallery_name        = var.gallery_name
     image_name          = var.gallery_image_definition
