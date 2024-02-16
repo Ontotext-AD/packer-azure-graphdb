@@ -130,9 +130,8 @@ variable base_image_sku {
 ########################################
 
 variable gallery_subscription_id {
-  description = "ID of the subscription where the Shared Image Gallery is located. Will use subscription_id as default if unspecified."
+  description = "ID of the subscription where the Shared Image Gallery is located. Can be the same as subscription_id."
   type        = string
-  default     = null
 }
 
 variable gallery_resource_group {

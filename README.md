@@ -33,19 +33,20 @@ Follow these steps to build an AMI for GraphDB using Packer:
    The Packer configuration allows you to customize various parameters, such as the GraphDB version, Azure build and
    replication regions, subscription, client and tenant IDs. To do so, create a variables file `variables.pkrvars.hcl`,
    example file:
-      ```bash
-      subscription_id                    = "<your_azure_subscription_id>"
-      tenant_id                          = "<your_azure_tenant_id>"
-      client_id                          = "<your_azure_service_principal_id>"
-      client_secret                      = "<your_azure_service_principal_secret>"
-      build_location                     = "East US"
-      graphdb_version                    = "10.4.0"
-      gallery_image_definition           = "10.4.0-x86_64"
-      gallery_resource_group             = "Packer-RG"
-      gallery_name                       = "GraphDB"
-      gallery_image_replication_regions  = ["North Europe", "UK South"]
-      build_allowed_inbound_ip_addresses = "<your_public_IP_address>"
-      ```
+    ```bash
+    subscription_id                    = "<your_azure_subscription_id>"
+    tenant_id                          = "<your_azure_tenant_id>"
+    client_id                          = "<your_azure_service_principal_id>"
+    client_secret                      = "<your_azure_service_principal_secret>"
+    build_location                     = "East US"
+    graphdb_version                    = "10.4.0"
+    gallery_subscription_id            = "<your_azure_image_gallery_subscription_id>"
+    gallery_image_definition           = "10.4.0-x86_64"
+    gallery_resource_group             = "Packer-RG"
+    gallery_name                       = "GraphDB"
+    gallery_image_replication_regions  = ["North Europe", "UK South"]
+    build_allowed_inbound_ip_addresses = "<your_public_IP_address>"
+    ```
 
 4. **Build the AMI**:
 
@@ -85,7 +86,7 @@ The following points can be customized in a packer variables file `variables.pkr
 
 **Subscription Configuration**
 
-* `subscription_id` (string): Your Azure subscription ID.
+* `subscription_id` (string): Your Azure subscription ID. VM images will be built in this subscription.
 * `tenant_id` (string): Your Azure Active Directory tenant ID.
 * `client_id` (string): The client ID (Service Principal ID) used for authentication.
 * `client_secret` (string): The client secret (Service Principal Secret) used for authentication.
@@ -116,8 +117,7 @@ The following points can be customized in a packer variables file `variables.pkr
 
 **Gallery Configuration**
 
-* `gallery_subscription_id` (string): ID of the subscription where the Shared Image Gallery is located. Will use subscription_id as default if
-  unspecified
+* `gallery_subscription_id` (string): ID of the subscription where the Shared Image Gallery is located. Can be the same as `subscription_id`.
 * `gallery_resource_group` (string): The resource group where the image gallery is located.
 * `gallery_name` (string): The name of the image gallery.
 * `gallery_image_definition` (string): The name of the x86_64 image to use.

@@ -20,32 +20,36 @@ if ! [ -f "$variables_file" ]; then
 fi
 
 # Extracts required variables from the variables_file
-subscription_id=$(grep 'subscription_id' "$variables_file" | cut -d '"' -f 2)
-echo "Subscription ID: $subscription_id"
+gallery_subscription_id=$(grep 'gallery_subscription_id' "$variables_file" | cut -d '"' -f 2)
+echo "Subscription ID: $gallery_subscription_id"
+
 gallery_image_definition=$(grep 'gallery_image_definition' "$variables_file" | cut -d '"' -f 2)
 echo "Image definition name: $gallery_image_definition"
+
 graphdb_version=$(grep 'graphdb_version' "$variables_file" | cut -d '"' -f 2)
 echo "GraphDB version: $graphdb_version"
+
 gallery_resource_group=$(grep 'gallery_resource_group' "$variables_file" | cut -d '"' -f 2)
 echo "Resource group: $gallery_resource_group"
+
 gallery_name=$(grep 'gallery_name' "$variables_file" | cut -d '"' -f 2)
 echo "Gallery: $gallery_name"
 
 # Checks if any of the required variables is empty
-if [ -z "$gallery_image_definition" ] || [ -z "$graphdb_version" ] || [ -z "$gallery_resource_group" ] || [ -z "$gallery_name" ] || [ -z "$subscription_id" ]; then
+if [ -z "$gallery_image_definition" ] || [ -z "$graphdb_version" ] || [ -z "$gallery_resource_group" ] || [ -z "$gallery_name" ] || [ -z "$gallery_subscription_id" ]; then
   echo "One or more required variables are not defined in $variables_file."
   exit 1
 fi
 
 # Constructs the az sig image-definition create command
 az_command="az sig image-definition create \
-     --subscription $subscription_id \
-     -g $gallery_resource_group \
-     --gallery-name $gallery_name \
-     --gallery-image-definition "$gallery_image_definition" \
+     --subscription \"$gallery_subscription_id\" \
+     --resource-group \"$gallery_resource_group\" \
+     --gallery-name \"$gallery_name\" \
+     --gallery-image-definition \"$gallery_image_definition\" \
      --publisher Ontotext \
      --offer GraphDB \
-     --sku "$graphdb_version" \
+     --sku \"$graphdb_version\" \
      --os-type Linux \
      --hyper-v-generation v2 \
      --minimum-cpu-core 4 \
@@ -53,10 +57,17 @@ az_command="az sig image-definition create \
      --minimum-memory 4 \
      --maximum-memory 128 "
 
-# TODO: defuk is this :
 echo "Extracted variables and constructed Azure CLI command:"
-echo "Creating SIG"
+echo "$az_command"
+
+echo "Creating SIG image definition"
 eval "$az_command"
-# Waits for the Shared Image Gallery to be created
-az sig image-definition wait -i "$gallery_image_definition" -r "$gallery_name" -g "$gallery_resource_group" --created --subscription $subscription_id
-echo "Begin building of the Azure VM image"
+
+echo "Waiting for the SIG image definition creation to complete"
+az sig image-definition wait \
+       --subscription "$gallery_subscription_id" \
+       --resource-group "$gallery_resource_group" \
+       --gallery-name "$gallery_name" \
+       --gallery-image-definition "$gallery_image_definition" \
+       --created
+echo "SUCCESS: SIG image definition created"
