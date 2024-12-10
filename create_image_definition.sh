@@ -49,7 +49,7 @@ az_command="az sig image-definition create \
      --gallery-image-definition \"$gallery_image_definition\" \
      --publisher Ontotext \
      --offer GraphDB \
-     --sku \"$graphdb_version\" \
+     --sku \"$graphdb_version-trusted\" \
      --os-type Linux \
      --hyper-v-generation v2 \
      --minimum-cpu-core 4 \
