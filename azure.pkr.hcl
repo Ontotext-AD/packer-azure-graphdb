@@ -31,6 +31,10 @@ source azure-arm ubuntu-x86-64 {
   shared_image_gallery_replica_count               = var.gallery_image_replica_count
   shared_gallery_image_version_exclude_from_latest = var.gallery_image_version_exclude_from_latest
 
+  secure_boot_enabled = true
+  vtpm_enabled        = true
+  security_type       = "TrustedLaunch"
+
   azure_tags = merge({
     GraphDB_Version  = "${var.graphdb_version}"
     CPU_Architecture = "x86-64"

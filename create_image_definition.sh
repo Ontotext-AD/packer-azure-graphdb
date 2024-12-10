@@ -49,13 +49,15 @@ az_command="az sig image-definition create \
      --gallery-image-definition \"$gallery_image_definition\" \
      --publisher Ontotext \
      --offer GraphDB \
-     --sku \"$graphdb_version\" \
+     --sku \"$graphdb_version-trusted\" \
      --os-type Linux \
      --hyper-v-generation v2 \
      --minimum-cpu-core 4 \
      --maximum-cpu-core 64 \
      --minimum-memory 4 \
-     --maximum-memory 128 "
+     --maximum-memory 128 \
+     --os-state Specialized \
+     --features SecurityType=TrustedLaunch"
 
 echo "Extracted variables and constructed Azure CLI command:"
 echo "$az_command"
