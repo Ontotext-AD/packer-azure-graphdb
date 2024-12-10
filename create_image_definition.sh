@@ -55,7 +55,9 @@ az_command="az sig image-definition create \
      --minimum-cpu-core 4 \
      --maximum-cpu-core 64 \
      --minimum-memory 4 \
-     --maximum-memory 128 "
+     --maximum-memory 128 \
+     --os-state Specialized \
+     --features SecurityType=TrustedLaunch"
 
 echo "Extracted variables and constructed Azure CLI command:"
 echo "$az_command"
