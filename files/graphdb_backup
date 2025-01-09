@@ -9,7 +9,7 @@ az login --identity
 
 GRAPHDB_USER="${1}"
 GRAPHDB_PASSWORD="${2}"
-NODE_STATE="$(curl --silent --fail --user "$GRAPHDB_USER:$GRAPHDB_PASSWORD" localhost:7200/rest/cluster/node/status | jq -r .nodeState)"
+NODE_STATE="$(curl --silent --user "$GRAPHDB_USER:$GRAPHDB_PASSWORD" localhost:7200/rest/cluster/node/status | jq -r .nodeState)"
 BACKUP_NAME="$(date +'%Y-%m-%d_%H-%M-%S').tar"
 BACKUP_STORAGE_ACCOUNT_NAME="${3}"
 BACKUP_STORAGE_CONTAINER_NAME="${4}"
