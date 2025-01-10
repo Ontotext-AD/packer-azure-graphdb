@@ -2,6 +2,10 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
+## 1.2.1
+
+- Fixed the get `NODE_STATE` step in the `graphdb_backup` script.
+
 ## 1.2.0
 
 ### Changes
