@@ -2,10 +2,6 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
-## 1.2.2
-
-- Disabled the GraphDB JS plugin by default (GDB-11622)
-
 ## 1.2.1
 
 - Fixed the get `NODE_STATE` step in the `graphdb_backup` script.
