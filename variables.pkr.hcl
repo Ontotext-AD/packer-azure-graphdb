@@ -109,7 +109,7 @@ variable build_os_disk_size_gb {
 variable base_image_offer {
   description = "Name of the publisher's offer to use for your base image"
   type        = string
-  default     = "0001-com-ubuntu-server-jammy"
+  default     = "ubuntu-24_04-lts"
 }
 
 variable base_image_publisher {
@@ -122,7 +122,7 @@ variable base_image_publisher {
 variable base_image_sku {
   description = "SKU of the image offer to use for your base image (Azure Marketplace Images only)."
   type        = string
-  default     = "22_04-lts-gen2"
+  default     = "server"
 }
 
 ########################################
