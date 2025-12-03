@@ -5,6 +5,7 @@ build {
 
   provisioner "file" {
     sources = [
+      "./files/update_ubuntu_packages.sh",
       "./files/graphdb.env",
       "./files/graphdb.service",
       "./files/graphdb-cluster-proxy.service",
