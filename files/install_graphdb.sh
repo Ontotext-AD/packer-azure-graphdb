@@ -29,6 +29,10 @@ echo "##########################"
 echo "#    Installing Tools    #"
 echo "##########################"
 
+apt-get -qq update
+# Required for Telegraf installation
+apt-get -qq install -y ca-certificates gnupg
+
 # Temurin setup
 echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print $2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 mkdir -p /etc/apt/keyrings
@@ -102,11 +106,18 @@ echo "#############################"
 echo "#    Installing Telegraf    #"
 echo "#############################"
 
-curl -fsSL https://repos.influxdata.com/influxdata-archive.key > influxdata-archive.key
-echo '943666881a1b8d9b849b74caebf02d3465d6beb716510d86a39f6c8e8dac7515 influxdata-archive.key' | sha256sum -c && cat influxdata-archive.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive.gpg > /dev/null
-echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+curl -fsSL -o /tmp/influxdata-archive.key https://repos.influxdata.com/influxdata-archive.key
+
+gpg --show-keys --with-fingerprint --with-colons /tmp/influxdata-archive.key 2>&1 \
+  | grep -q '^fpr:\+24C975CBA61A024EE1B631787C3D57159FC2F927:$'
+
+gpg --dearmor < /tmp/influxdata-archive.key > /etc/apt/keyrings/influxdata-archive.gpg
+
+echo 'deb [signed-by=/etc/apt/keyrings/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' \
+  > /etc/apt/sources.list.d/influxdata.list
+
 apt-get -qq update
-apt-get -qq install telegraf
+apt-get -qq install -y telegraf
 
 echo "Telegraf installed"
 
