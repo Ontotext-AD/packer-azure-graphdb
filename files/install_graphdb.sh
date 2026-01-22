@@ -40,7 +40,7 @@ wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /et
 
 # Install Tools
 apt-get -qq -o DPkg::Lock::Timeout=300 update -y
-apt-get -qq -o DPkg::Lock::Timeout=300 install -y bash-completion jq nvme-cli temurin-21-jdk unzip
+apt-get -qq -o DPkg::Lock::Timeout=300 install -y bash-completion jq nvme-cli openjdk-11-jdk unzip
 
 echo "##############################"
 echo "#    Installing Azure CLI    #"
