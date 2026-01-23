@@ -106,15 +106,13 @@ echo "#############################"
 echo "#    Installing Telegraf    #"
 echo "#############################"
 
-curl -fsSL -o /tmp/influxdata-archive.key https://repos.influxdata.com/influxdata-archive.key
+install -m 0755 -d /usr/share/keyrings
+curl -fsSL https://repos.influxdata.com/influxdata-archive.key \
+  | gpg --dearmor > /usr/share/keyrings/influxdata-archive.gpg
 
-gpg --show-keys --with-fingerprint --with-colons /tmp/influxdata-archive.key 2>&1 \
-  | grep -q '^fpr:\+24C975CBA61A024EE1B631787C3D57159FC2F927:$'
-
-gpg --dearmor < /tmp/influxdata-archive.key > /etc/apt/keyrings/influxdata-archive.gpg
-
-echo 'deb [signed-by=/etc/apt/keyrings/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' \
-  > /etc/apt/sources.list.d/influxdata.list
+cat > /etc/apt/sources.list.d/influxdata-bootstrap.list <<'EOF'
+deb [signed-by=/usr/share/keyrings/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main
+EOF
 
 apt-get -qq update
 apt-get -qq install -y telegraf
