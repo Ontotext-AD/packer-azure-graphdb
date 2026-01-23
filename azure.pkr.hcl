@@ -19,6 +19,9 @@ source azure-arm ubuntu-x86-64 {
   image_publisher = var.base_image_publisher
   image_sku       = var.base_image_sku
 
+  managed_image_resource_group_name = var.build_resource_group_name
+  managed_image_name                = "${var.gallery_image_definition}-managed-${local.timestamp}"
+
   shared_image_gallery_destination {
     subscription        = var.gallery_subscription_id
     resource_group      = var.gallery_resource_group
