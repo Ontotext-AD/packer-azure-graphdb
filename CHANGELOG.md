@@ -2,14 +2,11 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
-## 1.5.0
-
-- Updated `github.com/hashicorp/azure` to 2.3.0
-
 ## 1.4.0
 
 - Updated Ubuntu version to 24.04 LTS
 - Updated Java version to temurin-21-jdk
+- Updated `github.com/hashicorp/azure` to 2.3.0
 
 ## 1.3.0
 
