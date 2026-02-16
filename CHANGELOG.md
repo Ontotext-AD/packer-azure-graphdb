@@ -2,6 +2,10 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
+## 2.0.0
+
+- Removed Telegraf from the VM image
+
 ## 1.4.0
 
 - Updated Ubuntu version to 24.04 LTS
