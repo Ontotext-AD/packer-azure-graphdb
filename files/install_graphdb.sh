@@ -7,7 +7,6 @@
 # * Creates a system user "graphdb" for GraphDB service.
 # * Creates GraphDB directories and sets up the necessary permissions.
 # * Downloads and installs GraphDB, configuring systemd for GraphDB and GraphDB proxy.
-# * Installs Telegraf for monitoring.
 # * Adjusts system settings for keepalive and file max size.
 # * Provisions a backup script.
 # * Clears authorized_keys files for security.
@@ -30,7 +29,6 @@ echo "#    Installing Tools    #"
 echo "##########################"
 
 apt-get -qq update
-# Required for Telegraf installation
 apt-get -qq install -y ca-certificates gnupg
 
 # Temurin setup
@@ -101,23 +99,6 @@ systemctl enable graphdb.service
 systemctl start graphdb.service
 
 echo "systemd configured"
-
-echo "#############################"
-echo "#    Installing Telegraf    #"
-echo "#############################"
-
-install -m 0755 -d /usr/share/keyrings
-curl -fsSL https://repos.influxdata.com/influxdata-archive.key \
-  | gpg --dearmor > /usr/share/keyrings/influxdata-archive.gpg
-
-cat > /etc/apt/sources.list.d/influxdata-bootstrap.list <<'EOF'
-deb [signed-by=/usr/share/keyrings/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main
-EOF
-
-apt-get -qq update
-apt-get -qq install -y telegraf
-
-echo "Telegraf installed"
 
 echo "#############################################"
 echo "#    Setting keepalive and file max size    #"
