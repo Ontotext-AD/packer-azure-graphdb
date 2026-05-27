@@ -101,6 +101,18 @@ variable build_os_disk_size_gb {
   default     = 30
 }
 
+variable "build_retries" {
+  description = "Max retries for the build provisioner"
+  type        = number
+  default     = 3
+}
+
+variable "build_breakpoint_enabled" {
+  description = "Toggles the breakpoint provisioner enabling you to troubleshoot the build"
+  type        = bool
+  default     = false
+}
+
 ########################
 # Base image variables #
 ########################
@@ -166,4 +178,14 @@ variable gallery_image_version_exclude_from_latest {
   description = "If set to true, Virtual Machines deployed from the latest version of the Image Definition won't use this Image Version"
   type        = bool
   default     = false
+}
+
+######################
+# Manifest variables #
+######################
+
+variable "manifest_path" {
+  description = "Path to the manifest post-processor output"
+  type        = string
+  default     = "manifest.json"
 }

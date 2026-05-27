@@ -35,9 +35,9 @@ source azure-arm ubuntu-x86-64 {
   shared_gallery_image_version_exclude_from_latest = var.gallery_image_version_exclude_from_latest
 
   azure_tags = merge({
-    GraphDB_Version  = "${var.graphdb_version}"
+    GraphDB_Version  = var.graphdb_version
     CPU_Architecture = "x86-64"
-    Build_Timestamp  = "${local.timestamp}"
+    Build_Timestamp  = local.timestamp
   }, var.tags)
 
   communicator                 = "ssh"
