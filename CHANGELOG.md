@@ -2,6 +2,15 @@
 
 All notable changes to the Packer template for creating GraphDB Azure VM images will be documented in this file.
 
+## 2.1.0
+
+- Updated the GraphDB cluster proxy service to use an env file similar to the main GraphDB service
+- Added manifest post-processor to create a manifest JSON with the AMI IDs
+- Renamed the pkr.hcl files to follow a naming convention closer to Terraform
+- Added retry count variable for the build provisioner
+- Added a security hardening script that disables modules susceptible to attacks (copy fail, dirty flag)
+- Separated the shell scripts to be in stages (setup, hardening, graphdb)
+
 ## 2.0.0
 
 - Removed Telegraf from the VM image
