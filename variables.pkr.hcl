@@ -121,7 +121,7 @@ variable "build_breakpoint_enabled" {
 variable base_image_offer {
   description = "Name of the publisher's offer to use for your base image"
   type        = string
-  default     = "ubuntu-24_04-lts"
+  default     = "ubuntu-26_04-lts"
 }
 
 variable base_image_publisher {
