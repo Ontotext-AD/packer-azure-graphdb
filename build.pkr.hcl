@@ -18,13 +18,15 @@ build {
     environment_vars = [
       "GRAPHDB_VERSION=${var.graphdb_version}",
     ]
-    inline      = ["sudo -E bash /tmp/install_graphdb.sh"]
+    # On Ubuntu 25.10+ "sudo" is sudo-rs, which ignores -E, so the var is passed as a sudo argument
+    inline      = ["sudo GRAPHDB_VERSION=\"$GRAPHDB_VERSION\" bash /tmp/install_graphdb.sh"]
     max_retries = 2
   }
 
   # https://developer.hashicorp.com/packer/integrations/hashicorp/azure/latest/components/builder/arm#deprovision
   provisioner "shell" {
-    execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
+    # On Ubuntu 25.10+ "sudo" is sudo-rs, which drops the caller env even with -E, so vars are passed as sudo arguments
+    execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} sh '{{ .Path }}'"
     inline = [
       "/usr/sbin/waagent -force -deprovision && export HISTSIZE=0 && sync"
     ]
