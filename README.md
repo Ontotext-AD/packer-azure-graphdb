@@ -111,7 +111,7 @@ The following points can be customized in a packer variables file `variables.pkr
 
 **Base Image Configuration**
 
-* `base_image_offer` (string): The offer for the base image (default is "ubuntu-24_04-lts").
+* `base_image_offer` (string): The offer for the base image (default is "ubuntu-26_04-lts").
 * `base_image_publisher` (string): The publisher for the base image (default is "canonical").
 * `base_image_sku` (string): The SKU for the base image (default is "server").
 

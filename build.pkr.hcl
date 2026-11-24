@@ -18,7 +18,8 @@ build {
     environment_vars = [
       "GRAPHDB_VERSION=${var.graphdb_version}",
     ]
-    execute_command = "{{ .Vars }} sudo -E bash '{{ .Path }}'"
+    # On Ubuntu 25.10+ "sudo" is sudo-rs, which drops the caller env even with -E, so vars are passed as sudo arguments
+    execute_command = "sudo {{ .Vars }} bash '{{ .Path }}'"
     scripts = [
       "./files/1-setup.sh",
       "./files/2-hardening.sh",
